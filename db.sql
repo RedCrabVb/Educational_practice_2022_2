@@ -5,8 +5,6 @@
 -- Dumped from database version 14.2 (Debian 14.2-1.pgdg110+1)
 -- Dumped by pg_dump version 14.1
 
--- Started on 2022-05-28 11:10:56
-
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
@@ -19,7 +17,6 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- TOC entry 237 (class 1255 OID 42391)
 -- Name: account_transactions_period(date, date); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -34,7 +31,6 @@ $$;
 
 
 --
--- TOC entry 228 (class 1255 OID 42371)
 -- Name: make_operation(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -58,7 +54,6 @@ $$;
 
 
 --
--- TOC entry 224 (class 1255 OID 42367)
 -- Name: save_history_active(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -74,10 +69,7 @@ END;
 $$;
 
 
-SET default_table_access_method = heap;
-
 --
--- TOC entry 214 (class 1259 OID 42294)
 -- Name: account_transactions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -89,12 +81,11 @@ CREATE TABLE public.account_transactions (
     user_id integer,
     transfer_account character varying(255) NOT NULL,
     date date DEFAULT now()
-);
+)
+PARTITION BY RANGE (account_transactions_id);
 
 
 --
--- TOC entry 3398 (class 0 OID 0)
--- Dependencies: 214
 -- Name: TABLE account_transactions; Type: COMMENT; Schema: public; Owner: -
 --
 
@@ -102,11 +93,11 @@ COMMENT ON TABLE public.account_transactions IS 'операции по счет�
 
 
 --
--- TOC entry 221 (class 1259 OID 42324)
 -- Name: account_transactions_account_transactions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public.account_transactions_account_transactions_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -115,16 +106,45 @@ CREATE SEQUENCE public.account_transactions_account_transactions_id_seq
 
 
 --
--- TOC entry 3399 (class 0 OID 0)
--- Dependencies: 221
 -- Name: account_transactions_account_transactions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
 ALTER SEQUENCE public.account_transactions_account_transactions_id_seq OWNED BY public.account_transactions.account_transactions_id;
 
 
+SET default_table_access_method = heap;
+
 --
--- TOC entry 210 (class 1259 OID 42272)
+-- Name: account_transactions_0_to_10; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.account_transactions_0_to_10 (
+    account_transactions_id integer DEFAULT nextval('public.account_transactions_account_transactions_id_seq'::regclass) NOT NULL,
+    type_transactions_id integer,
+    amount integer NOT NULL,
+    currency character varying(100) NOT NULL,
+    user_id integer,
+    transfer_account character varying(255) NOT NULL,
+    date date DEFAULT now()
+);
+
+
+--
+-- Name: account_transactions_10_to_100; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.account_transactions_10_to_100 (
+    account_transactions_id integer DEFAULT nextval('public.account_transactions_account_transactions_id_seq'::regclass) NOT NULL,
+    type_transactions_id integer,
+    amount integer NOT NULL,
+    currency character varying(100) NOT NULL,
+    user_id integer,
+    transfer_account character varying(255) NOT NULL,
+    date date DEFAULT now()
+);
+
+
+--
 -- Name: financial_products; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -136,8 +156,6 @@ CREATE TABLE public.financial_products (
 
 
 --
--- TOC entry 3400 (class 0 OID 0)
--- Dependencies: 210
 -- Name: TABLE financial_products; Type: COMMENT; Schema: public; Owner: -
 --
 
@@ -145,7 +163,6 @@ COMMENT ON TABLE public.financial_products IS 'Финансовые продук
 
 
 --
--- TOC entry 209 (class 1259 OID 42271)
 -- Name: financial_products_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -159,8 +176,6 @@ CREATE SEQUENCE public.financial_products_id_seq
 
 
 --
--- TOC entry 3401 (class 0 OID 0)
--- Dependencies: 209
 -- Name: financial_products_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -168,7 +183,6 @@ ALTER SEQUENCE public.financial_products_id_seq OWNED BY public.financial_produc
 
 
 --
--- TOC entry 217 (class 1259 OID 42309)
 -- Name: history_active_user; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -180,8 +194,6 @@ CREATE TABLE public.history_active_user (
 
 
 --
--- TOC entry 3402 (class 0 OID 0)
--- Dependencies: 217
 -- Name: TABLE history_active_user; Type: COMMENT; Schema: public; Owner: -
 --
 
@@ -189,7 +201,6 @@ COMMENT ON TABLE public.history_active_user IS 'История использо�
 
 
 --
--- TOC entry 220 (class 1259 OID 42322)
 -- Name: history_active_user_history_active_user_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -202,8 +213,6 @@ CREATE SEQUENCE public.history_active_user_history_active_user_id_seq
 
 
 --
--- TOC entry 3403 (class 0 OID 0)
--- Dependencies: 220
 -- Name: history_active_user_history_active_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -211,7 +220,6 @@ ALTER SEQUENCE public.history_active_user_history_active_user_id_seq OWNED BY pu
 
 
 --
--- TOC entry 212 (class 1259 OID 42281)
 -- Name: status_financial_products; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -225,8 +233,6 @@ CREATE TABLE public.status_financial_products (
 
 
 --
--- TOC entry 3404 (class 0 OID 0)
--- Dependencies: 212
 -- Name: TABLE status_financial_products; Type: COMMENT; Schema: public; Owner: -
 --
 
@@ -234,7 +240,6 @@ COMMENT ON TABLE public.status_financial_products IS 'Статус финанс�
 
 
 --
--- TOC entry 211 (class 1259 OID 42280)
 -- Name: status_financial_products_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -248,8 +253,6 @@ CREATE SEQUENCE public.status_financial_products_id_seq
 
 
 --
--- TOC entry 3405 (class 0 OID 0)
--- Dependencies: 211
 -- Name: status_financial_products_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -257,7 +260,6 @@ ALTER SEQUENCE public.status_financial_products_id_seq OWNED BY public.status_fi
 
 
 --
--- TOC entry 223 (class 1259 OID 42397)
 -- Name: summary_information_about_the_client; Type: VIEW; Schema: public; Owner: -
 --
 
@@ -269,7 +271,88 @@ SELECT
 
 
 --
--- TOC entry 215 (class 1259 OID 42297)
+-- Name: t_note; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.t_note (
+    id bigint NOT NULL,
+    body text,
+    head text,
+    id_user bigint
+);
+
+
+--
+-- Name: t_note_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.t_note_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: t_note_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.t_note_id_seq OWNED BY public.t_note.id;
+
+
+--
+-- Name: t_role; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.t_role (
+    id bigint NOT NULL,
+    name character varying(255)
+);
+
+
+--
+-- Name: t_user; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.t_user (
+    id bigint NOT NULL,
+    email character varying(255),
+    password character varying(255),
+    login character varying(255)
+);
+
+
+--
+-- Name: t_user_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.t_user_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: t_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.t_user_id_seq OWNED BY public.t_user.id;
+
+
+--
+-- Name: t_user_roles; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.t_user_roles (
+    user_id bigint NOT NULL,
+    roles_id bigint NOT NULL
+);
+
+
+--
 -- Name: type_transactions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -280,8 +363,6 @@ CREATE TABLE public.type_transactions (
 
 
 --
--- TOC entry 3406 (class 0 OID 0)
--- Dependencies: 215
 -- Name: TABLE type_transactions; Type: COMMENT; Schema: public; Owner: -
 --
 
@@ -289,7 +370,6 @@ COMMENT ON TABLE public.type_transactions IS 'Тип транзакций';
 
 
 --
--- TOC entry 218 (class 1259 OID 42318)
 -- Name: type_transactions_type_transactions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -302,8 +382,6 @@ CREATE SEQUENCE public.type_transactions_type_transactions_id_seq
 
 
 --
--- TOC entry 3407 (class 0 OID 0)
--- Dependencies: 218
 -- Name: type_transactions_type_transactions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -311,7 +389,6 @@ ALTER SEQUENCE public.type_transactions_type_transactions_id_seq OWNED BY public
 
 
 --
--- TOC entry 213 (class 1259 OID 42287)
 -- Name: user; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -331,7 +408,6 @@ CREATE TABLE public."user" (
 
 
 --
--- TOC entry 216 (class 1259 OID 42306)
 -- Name: user_session; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -346,7 +422,6 @@ CREATE TABLE public.user_session (
 
 
 --
--- TOC entry 222 (class 1259 OID 42345)
 -- Name: user_session_session_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -359,8 +434,6 @@ CREATE SEQUENCE public.user_session_session_id_seq
 
 
 --
--- TOC entry 3408 (class 0 OID 0)
--- Dependencies: 222
 -- Name: user_session_session_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -368,7 +441,6 @@ ALTER SEQUENCE public.user_session_session_id_seq OWNED BY public.user_session.s
 
 
 --
--- TOC entry 219 (class 1259 OID 42320)
 -- Name: user_user_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -381,8 +453,6 @@ CREATE SEQUENCE public.user_user_id_seq
 
 
 --
--- TOC entry 3409 (class 0 OID 0)
--- Dependencies: 219
 -- Name: user_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -390,7 +460,20 @@ ALTER SEQUENCE public.user_user_id_seq OWNED BY public."user".user_id;
 
 
 --
--- TOC entry 3209 (class 2604 OID 42325)
+-- Name: account_transactions_0_to_10; Type: TABLE ATTACH; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.account_transactions ATTACH PARTITION public.account_transactions_0_to_10 FOR VALUES FROM (0) TO (10);
+
+
+--
+-- Name: account_transactions_10_to_100; Type: TABLE ATTACH; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.account_transactions ATTACH PARTITION public.account_transactions_10_to_100 FOR VALUES FROM (10) TO (100);
+
+
+--
 -- Name: account_transactions account_transactions_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -398,7 +481,6 @@ ALTER TABLE ONLY public.account_transactions ALTER COLUMN account_transactions_i
 
 
 --
--- TOC entry 3204 (class 2604 OID 42275)
 -- Name: financial_products financial_products_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -406,7 +488,6 @@ ALTER TABLE ONLY public.financial_products ALTER COLUMN financial_products_id SE
 
 
 --
--- TOC entry 3213 (class 2604 OID 42323)
 -- Name: history_active_user history_active_user_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -414,7 +495,6 @@ ALTER TABLE ONLY public.history_active_user ALTER COLUMN history_active_user_id 
 
 
 --
--- TOC entry 3205 (class 2604 OID 42284)
 -- Name: status_financial_products status_financial_products_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -422,7 +502,20 @@ ALTER TABLE ONLY public.status_financial_products ALTER COLUMN status_financial_
 
 
 --
--- TOC entry 3211 (class 2604 OID 42319)
+-- Name: t_note id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.t_note ALTER COLUMN id SET DEFAULT nextval('public.t_note_id_seq'::regclass);
+
+
+--
+-- Name: t_user id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.t_user ALTER COLUMN id SET DEFAULT nextval('public.t_user_id_seq'::regclass);
+
+
+--
 -- Name: type_transactions type_transactions_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -430,7 +523,6 @@ ALTER TABLE ONLY public.type_transactions ALTER COLUMN type_transactions_id SET 
 
 
 --
--- TOC entry 3208 (class 2604 OID 42321)
 -- Name: user user_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -438,7 +530,6 @@ ALTER TABLE ONLY public."user" ALTER COLUMN user_id SET DEFAULT nextval('public.
 
 
 --
--- TOC entry 3212 (class 2604 OID 42346)
 -- Name: user_session session_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -446,27 +537,28 @@ ALTER TABLE ONLY public.user_session ALTER COLUMN session_id SET DEFAULT nextval
 
 
 --
--- TOC entry 3384 (class 0 OID 42294)
--- Dependencies: 214
--- Data for Name: account_transactions; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: account_transactions_0_to_10; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO public.account_transactions (account_transactions_id, type_transactions_id, amount, currency, user_id, transfer_account, date) VALUES (3, 3, 1000, 'RUB', 1, '523432', '2022-05-28');
-INSERT INTO public.account_transactions (account_transactions_id, type_transactions_id, amount, currency, user_id, transfer_account, date) VALUES (17, 2, 322, 'RUB', 1, '346', '2022-05-28');
-INSERT INTO public.account_transactions (account_transactions_id, type_transactions_id, amount, currency, user_id, transfer_account, date) VALUES (10, 2, 5000, 'RUB', 2, '345345', '2021-05-28');
-INSERT INTO public.account_transactions (account_transactions_id, type_transactions_id, amount, currency, user_id, transfer_account, date) VALUES (2, 1, 500, 'RUB', 1, '34534', '2016-05-29');
-INSERT INTO public.account_transactions (account_transactions_id, type_transactions_id, amount, currency, user_id, transfer_account, date) VALUES (18, 2, 600, 'RUB', 3, '5656', '2021-05-14');
-INSERT INTO public.account_transactions (account_transactions_id, type_transactions_id, amount, currency, user_id, transfer_account, date) VALUES (15, 1, 555, 'RUB', 3, '345345', '2021-05-07');
-INSERT INTO public.account_transactions (account_transactions_id, type_transactions_id, amount, currency, user_id, transfer_account, date) VALUES (1, 1, 900, 'RUB', 1, '23452', '2021-05-08');
-INSERT INTO public.account_transactions (account_transactions_id, type_transactions_id, amount, currency, user_id, transfer_account, date) VALUES (9, 1, 300, 'RUB', 2, '23345', '2022-05-05');
-INSERT INTO public.account_transactions (account_transactions_id, type_transactions_id, amount, currency, user_id, transfer_account, date) VALUES (16, 2, 600, 'RUB', 4, '34534', '2022-07-21');
-INSERT INTO public.account_transactions (account_transactions_id, type_transactions_id, amount, currency, user_id, transfer_account, date) VALUES (14, 3, 100, 'RUB', 3, '534534', '2022-02-05');
-INSERT INTO public.account_transactions (account_transactions_id, type_transactions_id, amount, currency, user_id, transfer_account, date) VALUES (12, 1, 300, 'RUB', 1, '12345', '2022-04-08');
+INSERT INTO public.account_transactions_0_to_10 (account_transactions_id, type_transactions_id, amount, currency, user_id, transfer_account, date) VALUES (2, 1, 500, 'RUB', 1, '34534', '2016-05-29');
+INSERT INTO public.account_transactions_0_to_10 (account_transactions_id, type_transactions_id, amount, currency, user_id, transfer_account, date) VALUES (1, 1, 900, 'RUB', 1, '23452', '2021-05-08');
+INSERT INTO public.account_transactions_0_to_10 (account_transactions_id, type_transactions_id, amount, currency, user_id, transfer_account, date) VALUES (9, 1, 300, 'RUB', 2, '23345', '2022-05-05');
 
 
 --
--- TOC entry 3380 (class 0 OID 42272)
--- Dependencies: 210
+-- Data for Name: account_transactions_10_to_100; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+INSERT INTO public.account_transactions_10_to_100 (account_transactions_id, type_transactions_id, amount, currency, user_id, transfer_account, date) VALUES (17, 2, 322, 'RUB', 1, '346', '2022-05-28');
+INSERT INTO public.account_transactions_10_to_100 (account_transactions_id, type_transactions_id, amount, currency, user_id, transfer_account, date) VALUES (10, 2, 5000, 'RUB', 2, '345345', '2021-05-28');
+INSERT INTO public.account_transactions_10_to_100 (account_transactions_id, type_transactions_id, amount, currency, user_id, transfer_account, date) VALUES (18, 2, 600, 'RUB', 3, '5656', '2021-05-14');
+INSERT INTO public.account_transactions_10_to_100 (account_transactions_id, type_transactions_id, amount, currency, user_id, transfer_account, date) VALUES (15, 1, 555, 'RUB', 3, '345345', '2021-05-07');
+INSERT INTO public.account_transactions_10_to_100 (account_transactions_id, type_transactions_id, amount, currency, user_id, transfer_account, date) VALUES (16, 2, 600, 'RUB', 4, '34534', '2022-07-21');
+INSERT INTO public.account_transactions_10_to_100 (account_transactions_id, type_transactions_id, amount, currency, user_id, transfer_account, date) VALUES (14, 3, 100, 'RUB', 3, '534534', '2022-02-05');
+INSERT INTO public.account_transactions_10_to_100 (account_transactions_id, type_transactions_id, amount, currency, user_id, transfer_account, date) VALUES (12, 1, 300, 'RUB', 1, '12345', '2022-04-08');
+
+
+--
 -- Data for Name: financial_products; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -484,8 +576,6 @@ INSERT INTO public.financial_products (financial_products_id, title, description
 
 
 --
--- TOC entry 3387 (class 0 OID 42309)
--- Dependencies: 217
 -- Data for Name: history_active_user; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -494,8 +584,6 @@ INSERT INTO public.history_active_user (history_active_user_id, last_active, use
 
 
 --
--- TOC entry 3382 (class 0 OID 42281)
--- Dependencies: 212
 -- Data for Name: status_financial_products; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -504,8 +592,30 @@ INSERT INTO public.status_financial_products (status_financial_products_id, user
 
 
 --
--- TOC entry 3385 (class 0 OID 42297)
--- Dependencies: 215
+-- Data for Name: t_note; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+
+
+--
+-- Data for Name: t_role; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+
+
+--
+-- Data for Name: t_user; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+
+
+--
+-- Data for Name: t_user_roles; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+
+
+--
 -- Data for Name: type_transactions; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -515,21 +625,17 @@ INSERT INTO public.type_transactions (type_transactions_id, name) VALUES (3, 'tr
 
 
 --
--- TOC entry 3383 (class 0 OID 42287)
--- Dependencies: 213
 -- Data for Name: user; Type: TABLE DATA; Schema: public; Owner: -
 --
 
+INSERT INTO public."user" (user_id, first_name, last_name, patronymic, phone, mail, passport, salt, hash_password, amount, currency) VALUES (2, 'Чудин', 'Бронислав ', 'Романович', '+7 (907) 300-81-95', 'BronislavChudin25@yandex.ru', 1823, 54, 45645645, 14100, 'RUB');
+INSERT INTO public."user" (user_id, first_name, last_name, patronymic, phone, mail, passport, salt, hash_password, amount, currency) VALUES (4, 'Ленский ', 'Станимир ', 'Владимирович', '+7 (914) 472-21-68', 'StanimirLenskiy428@mail.ru', 6454, 54, 345345, 2955, 'RUB');
+INSERT INTO public."user" (user_id, first_name, last_name, patronymic, phone, mail, passport, salt, hash_password, amount, currency) VALUES (3, 'Конягин ', 'Эрнст ', 'Андреевич', '+7 (931) 031-43-89', 'ErnstKonyagin290@mail.ru', 3453, 23, 6645645, -120, 'RUB');
+INSERT INTO public."user" (user_id, first_name, last_name, patronymic, phone, mail, passport, salt, hash_password, amount, currency) VALUES (1, 'Быков', 'Евгений', 'Леонидович', '+7 (971) 458-28-72', 'evgeniy12041980@mail.ru', 1923, 45, 34534534, -4812, 'RUB');
 INSERT INTO public."user" (user_id, first_name, last_name, patronymic, phone, mail, passport, salt, hash_password, amount, currency) VALUES (5, 'Сомова ', 'Борислава ', 'Эдуардовна', '+7 (985) 071-70-76', 'BorislavaSomova234@yandex.com', 3434, 65, 23423432, 1000, 'RUB');
-INSERT INTO public."user" (user_id, first_name, last_name, patronymic, phone, mail, passport, salt, hash_password, amount, currency) VALUES (2, 'Чудин', 'Бронислав ', 'Романович', '+7 (907) 300-81-95', 'BronislavChudin25@yandex.ru', 1823, 54, 45645645, 0, 'RUB');
-INSERT INTO public."user" (user_id, first_name, last_name, patronymic, phone, mail, passport, salt, hash_password, amount, currency) VALUES (4, 'Ленский ', 'Станимир ', 'Владимирович', '+7 (914) 472-21-68', 'StanimirLenskiy428@mail.ru', 6454, 54, 345345, 1155, 'RUB');
-INSERT INTO public."user" (user_id, first_name, last_name, patronymic, phone, mail, passport, salt, hash_password, amount, currency) VALUES (1, 'Быков', 'Евгений', 'Леонидович', '+7 (971) 458-28-72', 'evgeniy12041980@mail.ru', 1923, 45, 34534534, 322, 'RUB');
-INSERT INTO public."user" (user_id, first_name, last_name, patronymic, phone, mail, passport, salt, hash_password, amount, currency) VALUES (3, 'Конягин ', 'Эрнст ', 'Андреевич', '+7 (931) 031-43-89', 'ErnstKonyagin290@mail.ru', 3453, 23, 6645645, 45, 'RUB');
 
 
 --
--- TOC entry 3386 (class 0 OID 42306)
--- Dependencies: 216
 -- Data for Name: user_session; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -537,17 +643,13 @@ INSERT INTO public.user_session (session_id, user_id, expiration_date, last_acti
 
 
 --
--- TOC entry 3410 (class 0 OID 0)
--- Dependencies: 221
 -- Name: account_transactions_account_transactions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.account_transactions_account_transactions_id_seq', 18, true);
+SELECT pg_catalog.setval('public.account_transactions_account_transactions_id_seq', 1, false);
 
 
 --
--- TOC entry 3411 (class 0 OID 0)
--- Dependencies: 209
 -- Name: financial_products_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
@@ -555,8 +657,6 @@ SELECT pg_catalog.setval('public.financial_products_id_seq', 10, true);
 
 
 --
--- TOC entry 3412 (class 0 OID 0)
--- Dependencies: 220
 -- Name: history_active_user_history_active_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
@@ -564,8 +664,6 @@ SELECT pg_catalog.setval('public.history_active_user_history_active_user_id_seq'
 
 
 --
--- TOC entry 3413 (class 0 OID 0)
--- Dependencies: 211
 -- Name: status_financial_products_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
@@ -573,8 +671,20 @@ SELECT pg_catalog.setval('public.status_financial_products_id_seq', 3, true);
 
 
 --
--- TOC entry 3414 (class 0 OID 0)
--- Dependencies: 218
+-- Name: t_note_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.t_note_id_seq', 1, false);
+
+
+--
+-- Name: t_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.t_user_id_seq', 1, false);
+
+
+--
 -- Name: type_transactions_type_transactions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
@@ -582,8 +692,6 @@ SELECT pg_catalog.setval('public.type_transactions_type_transactions_id_seq', 1,
 
 
 --
--- TOC entry 3415 (class 0 OID 0)
--- Dependencies: 222
 -- Name: user_session_session_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
@@ -591,8 +699,6 @@ SELECT pg_catalog.setval('public.user_session_session_id_seq', 1, true);
 
 
 --
--- TOC entry 3416 (class 0 OID 0)
--- Dependencies: 219
 -- Name: user_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
@@ -600,7 +706,6 @@ SELECT pg_catalog.setval('public.user_user_id_seq', 5, true);
 
 
 --
--- TOC entry 3221 (class 2606 OID 42317)
 -- Name: account_transactions account_transactions_pk; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -609,7 +714,22 @@ ALTER TABLE ONLY public.account_transactions
 
 
 --
--- TOC entry 3215 (class 2606 OID 42279)
+-- Name: account_transactions_0_to_10 account_transactions_0_to_10_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.account_transactions_0_to_10
+    ADD CONSTRAINT account_transactions_0_to_10_pkey PRIMARY KEY (account_transactions_id);
+
+
+--
+-- Name: account_transactions_10_to_100 account_transactions_10_to_100_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.account_transactions_10_to_100
+    ADD CONSTRAINT account_transactions_10_to_100_pkey PRIMARY KEY (account_transactions_id);
+
+
+--
 -- Name: financial_products financial_products_pk; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -618,7 +738,6 @@ ALTER TABLE ONLY public.financial_products
 
 
 --
--- TOC entry 3230 (class 2606 OID 42313)
 -- Name: history_active_user history_active_user_pk; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -627,7 +746,6 @@ ALTER TABLE ONLY public.history_active_user
 
 
 --
--- TOC entry 3217 (class 2606 OID 42286)
 -- Name: status_financial_products status_financial_products_pk; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -636,7 +754,38 @@ ALTER TABLE ONLY public.status_financial_products
 
 
 --
--- TOC entry 3224 (class 2606 OID 42301)
+-- Name: t_note t_note_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.t_note
+    ADD CONSTRAINT t_note_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: t_role t_role_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.t_role
+    ADD CONSTRAINT t_role_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: t_user t_user_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.t_user
+    ADD CONSTRAINT t_user_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: t_user_roles t_user_roles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.t_user_roles
+    ADD CONSTRAINT t_user_roles_pkey PRIMARY KEY (user_id, roles_id);
+
+
+--
 -- Name: type_transactions type_transactions_pk; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -645,7 +794,6 @@ ALTER TABLE ONLY public.type_transactions
 
 
 --
--- TOC entry 3219 (class 2606 OID 42293)
 -- Name: user user_pk; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -654,7 +802,6 @@ ALTER TABLE ONLY public."user"
 
 
 --
--- TOC entry 3226 (class 2606 OID 42348)
 -- Name: user_session user_session_pk; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -663,7 +810,6 @@ ALTER TABLE ONLY public.user_session
 
 
 --
--- TOC entry 3222 (class 1259 OID 42302)
 -- Name: type_transactions_name_uindex; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -671,7 +817,6 @@ CREATE UNIQUE INDEX type_transactions_name_uindex ON public.type_transactions US
 
 
 --
--- TOC entry 3227 (class 1259 OID 42344)
 -- Name: user_session_session_id_uindex; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -679,7 +824,6 @@ CREATE UNIQUE INDEX user_session_session_id_uindex ON public.user_session USING 
 
 
 --
--- TOC entry 3228 (class 1259 OID 42364)
 -- Name: user_session_value_uindex; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -687,7 +831,20 @@ CREATE UNIQUE INDEX user_session_value_uindex ON public.user_session USING btree
 
 
 --
--- TOC entry 3378 (class 2618 OID 42400)
+-- Name: account_transactions_0_to_10_pkey; Type: INDEX ATTACH; Schema: public; Owner: -
+--
+
+ALTER INDEX public.account_transactions_pk ATTACH PARTITION public.account_transactions_0_to_10_pkey;
+
+
+--
+-- Name: account_transactions_10_to_100_pkey; Type: INDEX ATTACH; Schema: public; Owner: -
+--
+
+ALTER INDEX public.account_transactions_pk ATTACH PARTITION public.account_transactions_10_to_100_pkey;
+
+
+--
 -- Name: summary_information_about_the_client _RETURN; Type: RULE; Schema: public; Owner: -
 --
 
@@ -701,7 +858,6 @@ CREATE OR REPLACE VIEW public.summary_information_about_the_client AS
 
 
 --
--- TOC entry 3237 (class 2620 OID 42373)
 -- Name: account_transactions make_operation_after; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -709,7 +865,6 @@ CREATE TRIGGER make_operation_after AFTER INSERT ON public.account_transactions 
 
 
 --
--- TOC entry 3238 (class 2620 OID 42368)
 -- Name: user_session save_history_active_after; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -717,25 +872,38 @@ CREATE TRIGGER save_history_active_after AFTER UPDATE ON public.user_session FOR
 
 
 --
--- TOC entry 3234 (class 2606 OID 42374)
 -- Name: account_transactions account_transactions_type_transactions_type_transactions_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.account_transactions
+ALTER TABLE public.account_transactions
     ADD CONSTRAINT account_transactions_type_transactions_type_transactions_id_fk FOREIGN KEY (type_transactions_id) REFERENCES public.type_transactions(type_transactions_id);
 
 
 --
--- TOC entry 3233 (class 2606 OID 42359)
 -- Name: account_transactions account_transactions_user_user_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.account_transactions
+ALTER TABLE public.account_transactions
     ADD CONSTRAINT account_transactions_user_user_id_fk FOREIGN KEY (user_id) REFERENCES public."user"(user_id);
 
 
 --
--- TOC entry 3236 (class 2606 OID 42349)
+-- Name: t_user_roles fkj47yp3hhtsoajht9793tbdrp4; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.t_user_roles
+    ADD CONSTRAINT fkj47yp3hhtsoajht9793tbdrp4 FOREIGN KEY (roles_id) REFERENCES public.t_role(id);
+
+
+--
+-- Name: t_user_roles fkpqntgokae5e703qb206xvfdk3; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.t_user_roles
+    ADD CONSTRAINT fkpqntgokae5e703qb206xvfdk3 FOREIGN KEY (user_id) REFERENCES public.t_user(id);
+
+
+--
 -- Name: history_active_user history_active_user_user_session_session_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -744,7 +912,6 @@ ALTER TABLE ONLY public.history_active_user
 
 
 --
--- TOC entry 3232 (class 2606 OID 42354)
 -- Name: status_financial_products status_financial_products_financial_products_financial_products; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -753,7 +920,6 @@ ALTER TABLE ONLY public.status_financial_products
 
 
 --
--- TOC entry 3231 (class 2606 OID 42339)
 -- Name: status_financial_products status_financial_products_user_user_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -762,15 +928,12 @@ ALTER TABLE ONLY public.status_financial_products
 
 
 --
--- TOC entry 3235 (class 2606 OID 42334)
 -- Name: user_session user_session_user_user_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.user_session
     ADD CONSTRAINT user_session_user_user_id_fk FOREIGN KEY (user_id) REFERENCES public."user"(user_id);
 
-
--- Completed on 2022-05-28 11:10:56
 
 --
 -- PostgreSQL database dump complete

@@ -7,6 +7,7 @@ export const api = {
     registration: `${server}account/registration`,
 	authentication: `${server}hello`,
 	authorization: `${server}login`,
+	logout: `${server}logout`,
 	version: `${server}account/version`,
 	note: `${server}note`,
 	saveNote: `${server}note/save`,

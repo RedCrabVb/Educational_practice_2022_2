@@ -40,36 +40,8 @@ export const Home = () => {
                 .then(r => {
                     setVersion(r)
                 })
-            // fetch(api.userInfo, requestOptions)
-            //     .then(d => d.json())
-            //     .then(r => {
-            //         console.log(r)
-            //         setUserInfo(r)
-            //     })
+
         }
-    }
-
-    function botDisable(e: any) {
-        const data: string = localStorage.getItem(USER) || 'null'
-
-        console.log(JSON.stringify(userInfo))
-
-        const requestOptions = {
-            method: 'POST',
-            headers: new Headers(
-                {
-                    'Content-Type': 'application/json',
-                    'Authorization': data.toString(),
-                }
-            ),
-        }
-
-        // fetch(api.disableTelegram, requestOptions)
-        //     .then(d => d.json())
-        //     .then(r => {
-        //         console.log(r)
-        //         setUserInfo(r)
-        //     })
     }
 
     useEffect(() => {
@@ -78,6 +50,12 @@ export const Home = () => {
         }
     }
     );
+
+    function historyItem(str: string): JSX.Element {
+        return <div style={{margin: 10}} >
+            <span>{str}</span>
+        </div>
+    }
 
 
     return (
@@ -95,11 +73,13 @@ export const Home = () => {
                         }
 
                         <p>Оповещения в телеграмме {!userInfo.confirmedTg ? <span>не</span> : <></>} активированы</p>
-                        {userInfo.confirmedTg ? <button className={"btn btn-info"} onClick={botDisable}>Отписка от бота</button> : <></>}
                     </> : <></>
                 }
                 <br></br>
-                <a href={"https://t.me/note_30_05_bot"}>Telegram bot</a>
+                <label>История посещений</label>
+                {historyItem("2002 info")}
+                {historyItem("2003 info yandex")}
+                {historyItem("2004 info honor 10")}
 
                 <p>api: v: {versionText}</p>
             </div>

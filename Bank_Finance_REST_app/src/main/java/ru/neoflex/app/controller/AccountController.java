@@ -1,6 +1,7 @@
 package ru.neoflex.app.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.security.core.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,7 +34,8 @@ public class AccountController {
     }
 
     @GetMapping("version")
-    public @ResponseBody String version() {
-        return "1.0";
+    public @ResponseBody String version(Authentication authentication) {
+        System.out.println(authentication.getName());
+        return "1.1";
     }
 }

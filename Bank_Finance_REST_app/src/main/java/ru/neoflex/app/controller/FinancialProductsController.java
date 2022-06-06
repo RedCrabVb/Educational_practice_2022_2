@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping("financial_product")
 public class FinancialProductsController {
     @Autowired
     private FinancialProductsRepository financialProductsRepository;
@@ -23,9 +24,9 @@ public class FinancialProductsController {
         return financialProductsRepository.findAll();
     }
 
-    @GetMapping
+    @GetMapping(path = "status")
     public List<StatusFinancialProducts> getStatusProducts(@RequestParam Long idUser) {
-        return statusFinancialProductsRepository.findAll().stream().filter(a -> a.getUser().getId().equals(idUser)).collect(Collectors.toList());
+        return statusFinancialProductsRepository.findAll().stream().filter(a -> a.getTUser().getId().equals(idUser)).collect(Collectors.toList());
     }
 
     @PostMapping

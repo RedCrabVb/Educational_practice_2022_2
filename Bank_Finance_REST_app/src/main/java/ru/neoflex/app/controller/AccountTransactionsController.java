@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping(path = "transactions")
 public class AccountTransactionsController {
 
     @Autowired
@@ -23,7 +24,7 @@ public class AccountTransactionsController {
 
     @GetMapping
     public List<AccountTransactions> find(@RequestParam Long idUser) {
-        return accountTransactionsRepository.findAll().stream().filter(a -> a.getUser().getId().equals(idUser)).collect(Collectors.toList());
+        return accountTransactionsRepository.findAll().stream().filter(a -> a.getTUser().getId().equals(idUser)).collect(Collectors.toList());
     }
 
 }

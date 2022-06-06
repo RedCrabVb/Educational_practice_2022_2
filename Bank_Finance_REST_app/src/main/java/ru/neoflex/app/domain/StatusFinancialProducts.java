@@ -17,7 +17,7 @@ public class StatusFinancialProducts {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long statusFinancialProductsId;
-    private User user;
+    private User tUser;
     @ManyToOne
     private FinancialProducts financialProducts;
     private Date openDate;

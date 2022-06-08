@@ -20,6 +20,7 @@ public class AccountTransactions {
     private TypeTransactions typeTransactions;
     private int amount;
     private String currency;
+    @ManyToOne
     private User tUser;
     private String TransferAccount;
     private Date date;

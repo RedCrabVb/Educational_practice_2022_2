@@ -10,4 +10,5 @@ export const api = {
 	logout: `${server}logout`,
 	version: `${server}account/version`,
 	userInfo: `${server}account/info`,
+	financialProduct: `${server}financial_product`
 }

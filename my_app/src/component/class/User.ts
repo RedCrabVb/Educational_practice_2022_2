@@ -8,6 +8,5 @@ export class User {
         private patronymic: string, 
         private mail: string, 
         private passport: string,
-        private amount: number, 
         private currency: string) {}
 }

@@ -10,6 +10,11 @@ import { Registration } from './pages/commons/RegistrationPage';
 import { FinacialProducts } from './pages/FinancialProducts';
 import { Transactions } from './pages/Transactions';
 
+import 'bootstrap';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap/dist/js/bootstrap.js';
+import Popper from 'popper.js';
+
 function App() {
     return (
         <>

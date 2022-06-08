@@ -14,6 +14,6 @@ public class FinancialProducts {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long financialProductsId;
-    private String title;
     private String description;
+    private String title;
 }

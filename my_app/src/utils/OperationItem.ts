@@ -1,4 +1,4 @@
-import {NOTE, USER} from "./Storage";
+import {USER} from "./Storage";
 import { Item } from "../component/class/Item";
 import { Dispatch, SetStateAction } from "react";
 
@@ -6,14 +6,14 @@ import { Dispatch, SetStateAction } from "react";
 export function getItem<E extends Item>(setItem: Dispatch<SetStateAction<E[]>>, setError: (f: {enable: boolean, text: string}) => void, api: string, local: string) {
     const data: string = localStorage.getItem(USER) || 'null'
     
-    const requestOptions = {
+    const requestOptions: RequestInit = {
         method: 'GET',
         headers: new Headers(
             { 
                 'Content-Type': 'application/json', 
-                'Authorization': data.toString()
             }
         ),
+        credentials: 'include',
     }
     fetch(api, requestOptions)
         .then((response) => {
@@ -26,7 +26,7 @@ export function getItem<E extends Item>(setItem: Dispatch<SetStateAction<E[]>>, 
             localStorage.setItem(local, JSON.stringify(data))
            
         }).catch(error => {
-            console.log({error})
+            console.log(error)
 
             if (error.message === 'Network request failed') {
                 // AsyncStorage.getItem(NOTE).then(data => {

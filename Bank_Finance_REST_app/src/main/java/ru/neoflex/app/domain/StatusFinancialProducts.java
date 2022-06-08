@@ -17,9 +17,13 @@ public class StatusFinancialProducts {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long statusFinancialProductsId;
+    @ManyToOne
     private User tUser;
     @ManyToOne
     private FinancialProducts financialProducts;
     private Date openDate;
     private Date closeDate;
+
+    @Transient
+    private Long financialProductsId;
 }

@@ -9,12 +9,5 @@ export const api = {
 	authorization: `${server}login`,
 	logout: `${server}logout`,
 	version: `${server}account/version`,
-	note: `${server}note`,
-	saveNote: `${server}note/save`,
-	saveSmartTask: `${server}smarttask/save`,
-	smartTask: `${server}smarttask`,
-	timerTracker: `${server}timertracker`,
-	saveTimerTracker: `${server}timertracker/save`,
-	userInfo: `${server}user_info`,
-    disableTelegram: `${server}disable_tg`
+	userInfo: `${server}account/info`,
 }

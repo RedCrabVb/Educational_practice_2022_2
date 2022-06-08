@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { api } from '../utils/Api'
-import { getItem } from '../utils/OperationItem'
-import { ErrorView } from '../component/ErrorView'
-import { NoteComponent } from '../component/NoteComponent'
 import { Header } from "./commons/Header"
-import { NOTE } from "../utils/Storage"
-import { styleBlockItem, styleContainerItem, styleItems} from './commons/css/item'
-import { Note } from '../component/class/Note'
 import CSS from 'csstype'
 
 export const FinacialProducts = () => {

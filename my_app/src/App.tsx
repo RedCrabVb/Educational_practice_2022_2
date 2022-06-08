@@ -2,8 +2,6 @@ import './App.css';
 import { Routes, Route, Link } from 'react-router-dom'
 
 import { Home } from './pages/commons/HomePage'
-import { NotePage } from './pages/NotePage'
-import { Task } from './pages/TaskPage'
 import { Notfoundpage } from './pages/commons/NotFoundPage'
 import { LogIn } from './pages/commons/Login'
 

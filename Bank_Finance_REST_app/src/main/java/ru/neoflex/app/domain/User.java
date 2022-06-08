@@ -22,6 +22,14 @@ public class User implements UserDetails {
     private Long id;
     private String login;
     private String password;
+    private String firstName;
+    private String lastName;
+    private String patronymic;
+    private String mail;
+    private String phone;
+    private String passport;
+    private int amount;
+    private String currency;
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
@@ -60,12 +68,21 @@ public class User implements UserDetails {
         return password;
     }
 
+
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
                 ", login='" + login + '\'' +
                 ", password='" + password + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", patronymic='" + patronymic + '\'' +
+                ", mail='" + mail + '\'' +
+                ", phone='" + phone + '\'' +
+                ", passport='" + passport + '\'' +
+                ", amount=" + amount +
+                ", currency='" + currency + '\'' +
                 ", roles=" + roles +
                 '}';
     }

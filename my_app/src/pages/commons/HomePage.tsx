@@ -6,11 +6,16 @@ import React from 'react'
 import { Header } from './Header'
 
 interface UserInfo {
-    email: string;
-    username: string;
-    chatIdTg: string | null;
-    confirmedTg: boolean;
-    secretTokenTg: string | null;
+    id: number,
+    login: string,
+    password: string,
+    firstName: string,
+    lastName: string,
+    patronymic: string,
+    mail: string,
+    passport: string,
+    amount: number,
+    currency: string
 }
 
 export const Home = () => {
@@ -22,7 +27,9 @@ export const Home = () => {
 
     const requestOptions: RequestInit = {
         method: 'GET',
-        headers: new Headers({ }),
+        headers: new Headers({
+            'Content-Type': 'application/json'
+        }),
         credentials: 'include',
     }
 
@@ -36,11 +43,23 @@ export const Home = () => {
             console.log({ userInfo })
             isAuthorized(true)
             fetch(api.version, requestOptions)
-                .then(d => { console.log({fetchVersion: d}); return d.json() })
+                .then(d => { console.log({ fetchVersion: d }); return d.json() })
                 .then(r => {
                     setVersion(r)
                 })
-
+            fetch(api.userInfo, requestOptions)            
+                .then((response) => {
+                    if (!response.ok) throw new Error(response.status.toString());
+                    else return response.json();
+                })
+                .then((data) => {
+                    console.log({body: data})
+                    setUserInfo(data)
+                })
+                .catch((error) => {
+                    console.log(error + " in registration")
+                    // setError({ enable: true, text: 'Попробуйте ввести другой логин или повторить попытку регистрации позднее' })
+                })
         }
     }
 
@@ -52,7 +71,7 @@ export const Home = () => {
     );
 
     function historyItem(str: string): JSX.Element {
-        return <div style={{margin: 10}} >
+        return <div style={{ margin: 10 }} >
             <span>{str}</span>
         </div>
     }
@@ -65,14 +84,9 @@ export const Home = () => {
                 <h1>Home</h1>
                 {
                     userInfo ? <>
-                        <p>Почта: {userInfo.email}</p>
-                        <p>Логин: {userInfo.username}</p>
-                        {userInfo.secretTokenTg != null && !userInfo.confirmedTg ?
-                            <p>Код для подписки бота: {userInfo.secretTokenTg}</p>
-                            : <></>
-                        }
+                        <p>Почта: {userInfo.mail}</p>
+                        <p>Логин: {userInfo.login}</p>
 
-                        <p>Оповещения в телеграмме {!userInfo.confirmedTg ? <span>не</span> : <></>} активированы</p>
                     </> : <></>
                 }
                 <br></br>

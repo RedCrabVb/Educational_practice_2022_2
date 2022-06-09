@@ -40,12 +40,12 @@ export const FinacialProducts = () => {
             <span>{item.financialProducts.title}</span>
             <br></br>
             <><span>{item.openDate && new Date(item.openDate).toLocaleDateString()}</span>-<p>{item.openDate && new Date(item.closeDate).toLocaleDateString()}</p></>
-            <button className="btn btn-danger" onClick={() => closePorduct(item)}>close</button>
+            <div className="btn btn-danger" onClick={() => closePorduct(item)}>Зкарыть</div>
         </div>
     }
 
 
-    const onChangeStatus = ( e: React.ChangeEvent<HTMLInputElement>) => {
+    const onChangeStatus = (e: React.ChangeEvent<HTMLInputElement>) => {
         setDateClose(new Date(e.target.value))
     }
 
@@ -78,7 +78,7 @@ export const FinacialProducts = () => {
             })
             .then((data) => {
                 console.log(data)
-                setFinancialProductStatusAll(financialProductStatusAll.filter(f => 
+                setFinancialProductStatusAll(financialProductStatusAll.filter(f =>
                     f.statusFinancialProductsId != item.statusFinancialProductsId))
             })
             .catch((error) => {
@@ -88,7 +88,7 @@ export const FinacialProducts = () => {
     }
 
     function openProduct() {
-        const statusFinancialProductsTmp = {financialProductsId: selectProductId, openDate: dateOpen, closeDate: dateClose}
+        const statusFinancialProductsTmp = { financialProductsId: selectProductId, openDate: dateOpen, closeDate: dateClose }
 
         const requestOptions: RequestInit = {
             method: 'PUT',
@@ -106,7 +106,7 @@ export const FinacialProducts = () => {
             })
             .then((data) => {
                 console.log(data)
-                setFinancialProductStatusAll([data, ... financialProductStatusAll])
+                setFinancialProductStatusAll([data, ...financialProductStatusAll])
             })
             .catch((error) => {
                 console.log(error + " in open product")
@@ -118,10 +118,10 @@ export const FinacialProducts = () => {
         <>
             <Header />
             <div className="container" style={style}>
-            <ErrorView text={error.text} enable={error.enable} />
+                <ErrorView text={error.text} enable={error.enable} />
 
 
-                <div className="row row-cols-1 m-4 border border-5" style={{ margin: '10%', padding: 20}}>
+                <div className="row row-cols-1 m-4 border border-5" style={{ margin: '10%', padding: 20 }}>
                     <button onClick={() => { setFinancialProductOpen(!financialProductOpen) }} className={financialProductOpen ? "btn btn-primary" : "btn btn-secondary"}>Открыть финансовый продукт</button>
                     {
                         financialProductOpen && <>
@@ -147,8 +147,8 @@ export const FinacialProducts = () => {
 
                 <div className="row row-cols-1 m-4">
                     {financialProductStatusAll
-                    .filter(f => f.closeDate && new Date(f.closeDate).getTime() >= new Date().getTime())
-                    .map(fp => <FinacialProdcutItem key={fp.statusFinancialProductsId} item={fp}></FinacialProdcutItem>)}
+                        .filter(f => f.closeDate && new Date(f.closeDate).getTime() >= new Date().getTime())
+                        .map(fp => <FinacialProdcutItem key={fp.statusFinancialProductsId} item={fp}></FinacialProdcutItem>)}
                 </div>
 
             </div>
@@ -157,6 +157,5 @@ export const FinacialProducts = () => {
 }
 
 const style: CSS.Properties = {
-    display: 'inline-grid',
     flexDirection: 'row'
 }

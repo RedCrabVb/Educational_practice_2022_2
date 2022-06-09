@@ -86,7 +86,7 @@ export const Home = () => {
                     userInfo ? <>
                         <p>Почта: {userInfo.mail}</p>
                         <p>Логин: {userInfo.login}</p>
-
+                        <p>Сумма средст: {userInfo.amount}</p>
                     </> : <></>
                 }
                 <br></br>

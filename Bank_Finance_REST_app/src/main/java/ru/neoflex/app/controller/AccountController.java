@@ -54,7 +54,7 @@ public class AccountController {
     @GetMapping("version")
     public @ResponseBody String version(Authentication authentication) {
         System.out.println(authentication.getName());
-        return "1.2";
+        return "1.3";
     }
 
     @GetMapping("/del")//for test

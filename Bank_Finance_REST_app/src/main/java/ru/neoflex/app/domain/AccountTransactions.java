@@ -22,6 +22,7 @@ public class AccountTransactions {
     private String currency;
     @ManyToOne
     private User tUser;
-    private String TransferAccount;
+    @Transient
+    private String transferAccount;
     private Date date;
 }

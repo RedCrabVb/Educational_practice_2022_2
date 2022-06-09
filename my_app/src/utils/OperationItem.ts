@@ -29,6 +29,9 @@ export function getItem<E extends Item>(setItem: Dispatch<SetStateAction<E[]>>, 
             console.log(error)
 
             if (error.message === 'Network request failed') {
+                let result = localStorage.getItem(local) || '[]'
+                setError({enable: true, text: 'Загрузка локальных данных'})
+                setItem(JSON.parse(result))
                 // AsyncStorage.getItem(NOTE).then(data => {
                 //     console.log("Okey, load item from memory")
                 //     console.log(data)

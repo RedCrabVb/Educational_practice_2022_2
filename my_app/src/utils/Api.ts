@@ -13,4 +13,6 @@ export const api = {
 	financialProduct: `${server}financial_product`,
 	financialProductClose: `${server}financial_product/close`,
 	financialProductStatus: `${server}financial_product/status`,
+	transactions: `${server}transactions`,
+	transactionsType: `${server}transactions/type`,
 }

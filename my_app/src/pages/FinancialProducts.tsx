@@ -14,9 +14,17 @@ interface FinacialProducts extends Item {
     description: string
 }
 
+interface StatusFinancialProductsItem extends Item {
+    statusFinancialProductsId: number
+    financialProducts: FinacialProducts
+    openDate: Date
+    closeDate: Date
+}
+
 export const FinacialProducts = () => {
     const [financialProductOpen, setFinancialProductOpen] = useState(false)
-    const [financialProductAll, financialProductsAll] = useState<Array<FinacialProducts>>([])
+    const [financialProductAll, setFinancialProductsAll] = useState<Array<FinacialProducts>>([])
+    const [financialProductStatusAll, setFinancialProductStatusAll] = useState<Array<StatusFinancialProductsItem>>([])
 
     const [selectProductId, setSelectProductId] = useState(-1)
     const [dateOpen, setDateOpen] = useState(new Date())
@@ -27,10 +35,12 @@ export const FinacialProducts = () => {
     const [isLoading, setIsLoading] = useState(false)
 
 
-    function FinacialProdcutItem({ item }: { item: FinacialProducts }): JSX.Element {
+    function FinacialProdcutItem({ item }: { item: StatusFinancialProductsItem }): JSX.Element {
         return <div style={{ margin: 10 }} className="btn btn-outline-secondary" >
-            <span>{item.title}</span>
-            <button className="btn btn-secondary">close</button>
+            <span>{item.financialProducts.title}</span>
+            <br></br>
+            <><span>{item.openDate && new Date(item.openDate).toLocaleDateString()}</span>-<p>{item.openDate && new Date(item.closeDate).toLocaleDateString()}</p></>
+            <button className="btn btn-danger" onClick={() => closePorduct(item)}>close</button>
         </div>
     }
 
@@ -46,18 +56,46 @@ export const FinacialProducts = () => {
     useEffect(() => {
         if (!isLoading) {
             setIsLoading(true)
-            getItem(financialProductsAll, setError, api.financialProduct, stor.financial_product)
+            getItem(setFinancialProductsAll, setError, api.financialProduct, stor.FINACIAL_PRODCUT)
+            getItem(setFinancialProductStatusAll, setError, api.financialProductStatus, stor.FINACIAL_PRODCUT_STATUS)
         }
     })
 
-    function openProduct() {
-        
+    function closePorduct(item: StatusFinancialProductsItem) {
         const requestOptions: RequestInit = {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({financialProductsId: selectProductId, dateOpen, dateClose}),
+            body: item.statusFinancialProductsId.toString(),
+            credentials: 'include'
+        }
+        console.log(requestOptions.body)
+        fetch(api.financialProductClose, requestOptions)
+            .then((response) => {
+                if (!response.ok) throw new Error(response.status.toString());
+                else return response.json();
+            })
+            .then((data) => {
+                console.log(data)
+                setFinancialProductStatusAll(financialProductStatusAll.filter(f => 
+                    f.statusFinancialProductsId != item.statusFinancialProductsId))
+            })
+            .catch((error) => {
+                console.log(error + " in open product")
+                setError({ enable: true, text: 'Попробуйте открыть финансовый продукт позже' })
+            })
+    }
+
+    function openProduct() {
+        const statusFinancialProductsTmp = {financialProductsId: selectProductId, openDate: dateOpen, closeDate: dateClose}
+
+        const requestOptions: RequestInit = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(statusFinancialProductsTmp),
             credentials: 'include'
         }
         console.log(requestOptions.body)
@@ -68,7 +106,7 @@ export const FinacialProducts = () => {
             })
             .then((data) => {
                 console.log(data)
-                // setLogin(data.login)
+                setFinancialProductStatusAll([data, ... financialProductStatusAll])
             })
             .catch((error) => {
                 console.log(error + " in open product")
@@ -82,11 +120,8 @@ export const FinacialProducts = () => {
             <div className="container" style={style}>
             <ErrorView text={error.text} enable={error.enable} />
 
-                <div className="row row-cols-1 m-4">
-                    {/* {financialProductAll.map(fp => <FinacialProdcutItem key={fp.financialProductsId} item={fp}></FinacialProdcutItem>)} */}
-                </div>
 
-                <div className="row row-cols-1 m-4" style={{ margin: '5%' }}>
+                <div className="row row-cols-1 m-4 border border-5" style={{ margin: '10%', padding: 20}}>
                     <button onClick={() => { setFinancialProductOpen(!financialProductOpen) }} className={financialProductOpen ? "btn btn-primary" : "btn btn-secondary"}>Открыть финансовый продукт</button>
                     {
                         financialProductOpen && <>
@@ -109,6 +144,13 @@ export const FinacialProducts = () => {
                         </>
                     }
                 </div>
+
+                <div className="row row-cols-1 m-4">
+                    {financialProductStatusAll
+                    .filter(f => f.closeDate && new Date(f.closeDate).getTime() >= new Date().getTime())
+                    .map(fp => <FinacialProdcutItem key={fp.statusFinancialProductsId} item={fp}></FinacialProdcutItem>)}
+                </div>
+
             </div>
         </>
     )

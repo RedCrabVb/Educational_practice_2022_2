@@ -11,6 +11,7 @@ import ru.neoflex.app.repository.UserRepository;
 import ru.neoflex.app.service.UserService;
 
 import java.security.Principal;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,7 +38,7 @@ public class FinancialProductsController {
         return statusFinancialProductsRepository.findAll().stream().filter(a -> a.getTUser().equals(user)).collect(Collectors.toList());
     }
 
-    @PostMapping
+    @PutMapping
     public StatusFinancialProducts openProduct(@RequestBody StatusFinancialProducts statusFinancialProducts, Principal principal) {
         var user = userService.findUserByLogin(principal.getName());
         statusFinancialProducts.setTUser(user);
@@ -46,5 +47,19 @@ public class FinancialProductsController {
         );
         StatusFinancialProducts result = statusFinancialProductsRepository.save(statusFinancialProducts);
         return result;
+    }
+
+    @PostMapping(path = "close")
+    public StatusFinancialProducts closeProducts(@RequestBody Long id, Principal principal) {
+        var user = userService.findUserByLogin(principal.getName());
+
+        var statusFinancialProducts = statusFinancialProductsRepository.findById(id).get();
+        if (!statusFinancialProducts.getTUser().getId().equals(user.getId())) {
+            throw new IllegalStateException("Access exceeded");
+        }
+
+        statusFinancialProducts.setCloseDate(new Date(System.currentTimeMillis()));
+
+        return statusFinancialProductsRepository.save(statusFinancialProducts);
     }
 }

@@ -15,7 +15,7 @@ import java.util.Date;
 public class HistoryActiveUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int historyActiveUserId;
-    private Date last_active;
-    private int use_session_id;
+    private Long historyActiveUserId;
+    private Date lastActive;
+    private Long useSessionId;
 }

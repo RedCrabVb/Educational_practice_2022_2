@@ -1,5 +1,6 @@
-package ru.neoflex.app;
+package ru.neoflex.app.config;
 
+import jakarta.servlet.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import ru.neoflex.app.service.UserService;
+
+import java.io.IOException;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 

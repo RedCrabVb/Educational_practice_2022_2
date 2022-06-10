@@ -3,6 +3,7 @@ package ru.neoflex.app.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -47,8 +48,8 @@ public class AccountController {
     }
 
     @GetMapping("info")
-    public @ResponseBody User userInfo(Principal principal) {
-        return userService.findUserByLogin(principal.getName());
+    public @ResponseBody User userInfo(@AuthenticationPrincipal User user) {
+        return user;
     }
 
     @GetMapping("version")

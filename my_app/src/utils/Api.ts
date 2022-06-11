@@ -15,4 +15,5 @@ export const api = {
 	financialProductStatus: `${server}financial_product/status`,
 	transactions: `${server}transactions`,
 	transactionsType: `${server}transactions/type`,
+	userSession: `${server}session`,
 }

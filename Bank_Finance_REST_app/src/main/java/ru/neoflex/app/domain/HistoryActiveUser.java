@@ -16,6 +16,8 @@ public class HistoryActiveUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long historyActiveUserId;
-    private Date lastActive;
-    private Long useSessionId;
+    private Long lastActive;
+    private String useSessionId;
+    private String userAgent;
+    private Long userId;
 }

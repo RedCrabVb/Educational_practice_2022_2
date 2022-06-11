@@ -18,10 +18,19 @@ interface UserInfo {
     currency: string
 }
 
+interface HistoryActiveItem {
+    historyActiveUserId: number | undefined
+    lastActive: number | undefined
+    useSessionId: string | undefined
+    userAgent: string | undefined
+    userId: number | undefined
+}
+
 export const Home = () => {
     const [authorized, isAuthorized] = useState(false)
     const [versionText, setVersion] = useState('')
     const [userInfo, setUserInfo] = useState<UserInfo | undefined>(undefined)
+    const [historyActive, setHistoryActive] = useState<Record<string, Array<HistoryActiveItem>>>()
 
     const navigate = useNavigate()
 
@@ -58,7 +67,19 @@ export const Home = () => {
                 })
                 .catch((error) => {
                     console.log(error + " in registration")
-                    // setError({ enable: true, text: 'Попробуйте ввести другой логин или повторить попытку регистрации позднее' })
+                })
+
+            fetch(api.userSession, requestOptions)//todo: fix
+            .then((response) => {
+                if (!response.ok) throw new Error(response.status.toString());
+                else return response.json();
+            })
+                .then((data) => {
+                    console.log({body: data})
+                    setHistoryActive(data)
+                })
+                .catch((error) => {
+                    console.log(error + " in get session")
                 })
         }
     }
@@ -70,9 +91,10 @@ export const Home = () => {
     }
     );
 
-    function historyItem(str: string): JSX.Element {
-        return <div style={{ margin: 10 }} >
-            <span>{str}</span>
+    function HistoryItem({item}: {item: HistoryActiveItem}): JSX.Element {
+        return <div className='border border-1' style={{ margin: 10, padding: 10 }} >
+            <p>Время: {new Date(item.lastActive ? item.lastActive : 0).toLocaleDateString()}</p>
+            <p>Устройство: {item.userAgent}</p>
         </div>
     }
 
@@ -91,9 +113,15 @@ export const Home = () => {
                 }
                 <br></br>
                 <label>История посещений</label>
-                {historyItem("2002 info")}
-                {historyItem("2003 info yandex")}
-                {historyItem("2004 info honor 10")}
+                {
+                    historyActive && Array.from(Object.keys(historyActive)).map(h => {console.log(JSON.stringify(historyActive[h])); return <HistoryItem  key={h.toString()} item={{
+                        historyActiveUserId: historyActive[h][0].historyActiveUserId,
+                        lastActive: historyActive[h][0].lastActive,
+                        userAgent: historyActive[h][0].userAgent,
+                        userId: undefined,
+                        useSessionId: undefined
+                    }} />} )
+                }
 
                 <p>api: v: {versionText}</p>
             </div>

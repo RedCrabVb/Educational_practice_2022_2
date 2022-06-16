@@ -21,10 +21,12 @@ public class SessionController {
 
     @GetMapping
     public Map<String, Set<HistoryActiveUser>> get(HttpServletRequest request, @AuthenticationPrincipal User user) {
+        request.getSession().setAttribute("user_agent", request.getHeader("user-agent"));
+
         SimpleDateFormat sdf = new SimpleDateFormat("MMM-dd-yyyy");
 
          return sessionRepository.findAll().stream()
-                //.filter(u -> u.getUserId() != null && u.getUserId().equals(user.getId()))
+                .filter(u -> u.getUserId() != null && u.getUserId().equals(user.getId()))
                 .collect(Collectors.groupingBy((h) -> sdf.format(new Date(h.getLastActive())).toString(), Collectors.toSet()));
     }
 }

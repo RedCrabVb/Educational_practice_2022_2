@@ -85,13 +85,13 @@ export const Registration = () => {
     }
 
 
-    function elementInput(value: string, setValue: (f: string) => void, name: string, error_text: string | undefined) {
+    function elementInput(value: string, setValue: (f: string) => void, name: string, error_text: string | undefined, type: string = 'text') {
         return (
             <>
                 <div className="mb-2">
                     <ErrorSpan text={error_text} />
                     <label className="form-label">{name}</label>
-                    <input type="text" className="form-control"
+                    <input type={type} className="form-control"
                         value={value} onChange={(e) => setValue(e.target.value)} />
                 </div>
             </>
@@ -100,30 +100,31 @@ export const Registration = () => {
 
 
     return (
-        <div className="containerForm col-md-6">
+        <div className="cotainer">
 
-            <div className="col-md-6">
-                <ErrorView text={error.text} enable={error.enable} />
-                {elementInput(firstName, setFirstName, 'Имя', errors.login)}
-                {elementInput(lastName, setLastName, 'Фамилия', errors.login)}
-                {elementInput(patronymic, setPatronymic, 'Отчество', errors.login)}
-                {elementInput(phone, setPhone, 'Телефон', errors.login)}
-                {elementInput(pasport, setPassport, 'Паспорт', errors.login)}
-                {elementInput(mail, setMail, 'Почта', errors.mail)}
-                {elementInput(password, setPassword, 'Пароль', errors.password)}
-                {elementInput(password2, setPassword2, 'Пароль ещё раз', errors.password2)}
+            <div className="containerForm border">
+                <div className="col-md-6" >
+                    <ErrorView text={error.text} enable={error.enable} />
+                    {elementInput(firstName, setFirstName, 'Имя', errors.login)}
+                    {elementInput(lastName, setLastName, 'Фамилия', errors.login)}
+                    {elementInput(patronymic, setPatronymic, 'Отчество', errors.login)}
+                    {elementInput(phone, setPhone, 'Телефон', errors.login)}
+                    {elementInput(pasport, setPassport, 'Паспорт', errors.login)}
+                    {elementInput(mail, setMail, 'Почта', errors.mail)}
+                    {elementInput(password, setPassword, 'Пароль', errors.password, 'password')}
+                    {elementInput(password2, setPassword2, 'Пароль ещё раз', errors.password2, 'password')}
 
-                <div className="mb-2">
-                    <button onClick={validate} className="btn btn-primary mb-3 customButtons">Регистрация</button>
-                </div>
-
-
-                {login && <><span>Ваш логин: {login}</span>
                     <div className="mb-2">
-                        <button onClick={() => { navigate(route.home, { replace: true }) }} className="btn btn-primary mb-3 customButtons">Пройти авторизацию</button>
-                    </div></>}
-            </div>
+                        <button onClick={validate} className="btn btn-primary mb-3 customButtons">Регистрация</button>
+                    </div>
 
+
+                    {login && <><span>Ваш логин: {login}</span>
+                        <div className="mb-2">
+                            <button onClick={() => { navigate(route.home, { replace: true }) }} className="btn btn-primary mb-3 customButtons">Пройти авторизацию</button>
+                        </div></>}
+                </div>
+            </div>
         </div>
     )
 

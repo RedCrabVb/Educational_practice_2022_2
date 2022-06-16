@@ -54,7 +54,7 @@ public class AccountController {
 
     @GetMapping("version")
     public @ResponseBody String version(Authentication authentication) {
-        return "1.3";
+        return "1.4";
     }
 
     @GetMapping("/del")//for test

@@ -102,13 +102,13 @@ export const Home = () => {
     return (
         <div>
             <Header />
-            <div className={"container md-6"} >
+            <div className={"container md-6 "} >
                 <h1>Home</h1>
                 {
                     userInfo ? <>
                         <p>Почта: {userInfo.mail}</p>
                         <p>Логин: {userInfo.login}</p>
-                        <p>Сумма средст: {userInfo.amount}</p>
+                        <p>Сумма средств: {userInfo.amount}</p>
                     </> : <></>
                 }
                 <br></br>

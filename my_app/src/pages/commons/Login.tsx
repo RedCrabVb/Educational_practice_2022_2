@@ -80,24 +80,24 @@ export const LogIn = () => {
         )
     }
 
-    function elementInput(value: string, setValue: (f: string) => void, name: string, error_text: string | undefined) {
+    function elementInput(value: string, setValue: (f: string) => void, name: string, error_text: string | undefined, type: string = 'text') {
         return (
             <div className="mb-3">
                 <label className="form-label">{name}</label>
                 <ErrorSpan text={error_text} />
-                <input type="text" className="form-control" id="username"
+                <input type={type} className="form-control" id="username"
                     value={value} onChange={(e) => setValue(e.target.value)} />
             </div>
         )
     }
 
     return (
-        <div className="containerForm col-md-6">
+        <div className="containerForm col-md-4 border">
 
-            <div className="col-md-6">
+            <div className="col-md-10">
                 <ErrorView text={error.text} enable={error.enable} />
                 {elementInput(username, setLogin, 'Логин', errors.email)}
-                {elementInput(password, setPasswordn, 'Почта', errors.password)}
+                {elementInput(password, setPasswordn, 'Пароль', errors.password, 'password')}
 
                 <div className="mb-3">
                     <button onClick={validate} className="btn btn-primary mb-3 customButtons">Войти</button>

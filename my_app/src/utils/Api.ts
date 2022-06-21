@@ -1,5 +1,5 @@
-// export const server = "http://servermvp.ru:49379/"
-export const server = "http://localhost:8080/"
+export const server = "http://servermvp.ru:49190/"
+// export const server = "http://localhost:8080/"
 
 
 export const api = {

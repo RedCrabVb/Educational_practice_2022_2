@@ -49,7 +49,7 @@ public class AccountController {
 
     @GetMapping("info")
     public @ResponseBody User userInfo(@AuthenticationPrincipal User user) {
-        return user;
+        return userService.findUserByLogin(user.getLogin());
     }
 
     @GetMapping("version")

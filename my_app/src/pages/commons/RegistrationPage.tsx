@@ -11,7 +11,7 @@ export const Registration = () => {
     const [password2, setPassword2] = useState("")
     const [mail, setMail] = useState("")
     const [phone, setPhone] = useState("")
-    const [pasport, setPassport] = useState("")
+    const [passport, setPassport] = useState("")
     const [firstName, setFirstName] = useState("")
     const [lastName, setLastName] = useState("")
     const [patronymic, setPatronymic] = useState("")
@@ -59,10 +59,10 @@ export const Registration = () => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ password, firstName, lastName, patronymic, mail, pasport }).toString()
+            body: JSON.stringify({ password, firstName, lastName, patronymic, mail, passport, phone }).toString()
         };
 
-        console.log(JSON.stringify({ password, firstName, lastName, patronymic, mail, pasport }).toString())
+        console.log(JSON.stringify({ password, firstName, lastName, patronymic, mail, passport, phone }).toString())
         fetch(api.registration, requestOptions)
             .then((response) => {
                 if (!response.ok) throw new Error(response.status.toString());
@@ -109,7 +109,7 @@ export const Registration = () => {
                     {elementInput(lastName, setLastName, 'Фамилия', errors.login)}
                     {elementInput(patronymic, setPatronymic, 'Отчество', errors.login)}
                     {elementInput(phone, setPhone, 'Телефон', errors.login)}
-                    {elementInput(pasport, setPassport, 'Паспорт', errors.login)}
+                    {elementInput(passport, setPassport, 'Паспорт', errors.login)}
                     {elementInput(mail, setMail, 'Почта', errors.mail)}
                     {elementInput(password, setPassword, 'Пароль', errors.password, 'password')}
                     {elementInput(password2, setPassword2, 'Пароль ещё раз', errors.password2, 'password')}

@@ -19,7 +19,6 @@ interface UserInfo {
 }
 
 interface HistoryActiveItem {
-    historyActiveUserId: number | undefined
     lastActive: number | undefined
     useSessionId: string | undefined
     userAgent: string | undefined
@@ -30,7 +29,7 @@ export const Home = () => {
     const [authorized, isAuthorized] = useState(false)
     const [versionText, setVersion] = useState('')
     const [userInfo, setUserInfo] = useState<UserInfo | undefined>(undefined)
-    const [historyActive, setHistoryActive] = useState<Record<string, Array<HistoryActiveItem>>>()
+    const [historyActive, setHistoryActive] = useState<Array<HistoryActiveItem>>()
 
     const navigate = useNavigate()
 
@@ -56,6 +55,7 @@ export const Home = () => {
                 .then(r => {
                     setVersion(r)
                 })
+
             fetch(api.userInfo, requestOptions)            
                 .then((response) => {
                     if (!response.ok) throw new Error(response.status.toString());
@@ -70,10 +70,10 @@ export const Home = () => {
                 })
 
             fetch(api.userSession, requestOptions)//todo: fix
-            .then((response) => {
-                if (!response.ok) throw new Error(response.status.toString());
-                else return response.json();
-            })
+                .then((response) => {
+                    if (!response.ok) throw new Error(response.status.toString());
+                    else return response.json();
+                })
                 .then((data) => {
                     console.log({body: data})
                     setHistoryActive(data)
@@ -114,13 +114,7 @@ export const Home = () => {
                 <br></br>
                 <label>История посещений</label>
                 {
-                    historyActive && Array.from(Object.keys(historyActive)).map(h => {console.log(JSON.stringify(historyActive[h])); return <HistoryItem  key={h.toString()} item={{
-                        historyActiveUserId: historyActive[h][0].historyActiveUserId,
-                        lastActive: historyActive[h][0].lastActive,
-                        userAgent: historyActive[h][0].userAgent,
-                        userId: undefined,
-                        useSessionId: undefined
-                    }} />} )
+                    historyActive && historyActive.map(h => {return <HistoryItem  key={JSON.stringify(h).toString()} item={h} />} )
                 }
 
                 <p>api: v: {versionText}</p>

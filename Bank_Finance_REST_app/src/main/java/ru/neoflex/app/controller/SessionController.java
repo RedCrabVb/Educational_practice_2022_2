@@ -4,11 +4,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import ru.neoflex.app.domain.HistoryActiveUser;
+import ru.neoflex.app.domain.HistoryActiveUserSimple;
 import ru.neoflex.app.domain.User;
 import ru.neoflex.app.repository.HistoryActiveUserRepository;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -17,16 +16,15 @@ import java.util.stream.Collectors;
 public class SessionController {
 
     @Autowired
-    private HistoryActiveUserRepository sessionRepository;
+    private HistoryActiveUserRepository historyActiveUserRepository;
 
     @GetMapping
-    public Map<String, Set<HistoryActiveUser>> get(HttpServletRequest request, @AuthenticationPrincipal User user) {
+    public List<HistoryActiveUserSimple> get(HttpServletRequest request, @AuthenticationPrincipal User user) {
         request.getSession().setAttribute("user_agent", request.getHeader("user-agent"));
 
-        SimpleDateFormat sdf = new SimpleDateFormat("MMM-dd-yyyy");
-
-         return sessionRepository.findAll().stream()
-                .filter(u -> u.getUserId() != null && u.getUserId().equals(user.getId()))
-                .collect(Collectors.groupingBy((h) -> sdf.format(new Date(h.getLastActive())).toString(), Collectors.toSet()));
+         return historyActiveUserRepository.getAll().stream()
+                 .filter(u -> u.getUserId() != null && u.getUserId().equals(user.getId()))
+                 .sorted((o1, o2) -> Long.compare(o2.getLastActive(), o1.getLastActive()))
+                 .collect(Collectors.toList());
     }
 }

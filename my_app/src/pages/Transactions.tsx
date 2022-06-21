@@ -28,18 +28,21 @@ export const Transactions = () => {
     const [amount, setAmount] = useState(0)
     const [transferAccount, setTransferAccount] = useState<string | undefined>(undefined)
 
+    const [minDate, setMinDate] = useState<Date>(new Date(new Date().getTime() - (1000 * 60 * 60 * 24)))
+    const [maxDate, setMaxDate] = useState<Date>(new Date())
+
     const [error, setError] = useState({ enable: false, text: '' })
 
     const [isLoading, setIsLoading] = useState(false)
 
 
-    function AccountTransactionsItem({ item }: { item: AccountTransactions }):  JSX.Element {
+    function AccountTransactionsItem({ item }: { item: AccountTransactions }): JSX.Element {
         return (
             <div className={item.typeTransactions.typeTransactionsId == 1 ? "p-3 mb-2 bg-danger text-white" : "p-3 mb-2 bg-success text-white"}><p>{item.amount} {item.currency}</p><p>{new Date(item.date).toISOString()}</p></div>
-        )  
+        )
     }
 
-    
+
     useEffect(() => {
         if (!isLoading) {
             setIsLoading(true)
@@ -54,7 +57,7 @@ export const Transactions = () => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({currency, amount, transferAccount}),
+            body: JSON.stringify({ currency, amount, transferAccount }),
             credentials: 'include'
         }
         fetch(api.transactions, requestOptions)
@@ -97,7 +100,21 @@ export const Transactions = () => {
                 </div>
 
                 <div className="row row-cols-1 m-4">
+                    <label>История транзакций</label>
+                    <label>От </label>
+                    <input type="date" defaultValue={minDate.toISOString().substr(0,10)} onChange={(e) => setMinDate(new Date(e.target.value))}></input>
+
+                    <label>До</label>
+                    <input type="date" defaultValue={maxDate.toISOString().substr(0,10)} onChange={(e) => setMaxDate(new Date(e.target.value))}></input>
+
+                </div>
+
+                <div className="row row-cols-1 m-4">
                     {allTransactions
+                        .sort((s, s1) => {
+                            return new Date(s1.date).getTime() - new Date(s.date).getTime()
+                        })
+                        .filter(f => new Date(f.date) > minDate && new Date(f.date) < maxDate)
                         .map(fp => <AccountTransactionsItem key={fp.accountTransactionsId} item={fp}></AccountTransactionsItem>)}
                 </div>
 
